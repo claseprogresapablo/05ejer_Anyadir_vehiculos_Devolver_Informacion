@@ -22,8 +22,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //ACABADO
 
+
+    //atributos vista
     private TextView txtCuentaCoches;
     private TextView txtCuentaMotos;
     private TextView txtCuentaBicis;
@@ -31,13 +32,14 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAnyadirMoto;
     private Button btnAnyadirBici;
 
-    //inicializar variables
-    private ArrayList<Coche> listaCoche = new ArrayList<>();
-    private ArrayList<Moto> listaMoto = new ArrayList<>();
-    private ArrayList<Bici> listaBici = new ArrayList<>();
+    //Atributos Logica
+    private ArrayList<Coche> listaCoche;
+    private ArrayList<Moto> listaMoto;
+    private ArrayList<Bici> listaBici;
 
 
 
+    //Atributos eventos
     //ActivityResultLaunchers
     private ActivityResultLauncher<Intent> launcherCoches;
     private ActivityResultLauncher<Intent> launcherMotos;
@@ -48,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        inicializarVistas();
+        inicializarVariables();
+
         inicializaLaunchers();
 
 
@@ -89,13 +92,16 @@ public class MainActivity extends AppCompatActivity {
                         //si la ventana se ha cerrado bien == RESULT_OK
                         if (result.getResultCode() == RESULT_OK){
                             //Si trae info entra
-                            if (result.getData()!=null){
+                            if (result.getData()!=null && result.getData().getExtras() != null){
                                 Bundle bundle = result.getData().getExtras();
                                 //sacar del bundle la info segun el tag
                                 Coche coche = (Coche) bundle.getSerializable("CAR");
                                 //meter coche en la lista
-                                listaCoche.add(coche);
-                                txtCuentaCoches.setText(""+listaCoche.size());
+                                if (coche!= null){
+                                    listaCoche.add(coche);
+                                    txtCuentaCoches.setText("COCHES: "+listaCoche.size());
+                                }
+
                                 Toast.makeText(MainActivity.this, coche.toString(), Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -115,16 +121,21 @@ public class MainActivity extends AppCompatActivity {
                         //si la ventana se ha cerrado bien == RESULT_OK
                         if (result.getResultCode() == RESULT_OK){
                             //Si trae info entra
-                            if (result.getData()!=null){
+                            if (result.getData()!=null && result.getData().getExtras() != null){
                                 Bundle bundle = result.getData().getExtras();
                                 //sacar del bundle la info segun el tag
                                 Moto moto = (Moto) bundle.getSerializable("MOTO");
                                 //meter moto en la lista
-                                listaMoto.add(moto);
+                                if (moto!=null){
+                                    listaMoto.add(moto);
 
-                                txtCuentaMotos.setText(""+listaMoto.size());
+                                    txtCuentaMotos.setText("MOTOS: "+listaMoto.size());
+                                }
+
 
                                 Toast.makeText(MainActivity.this, moto.toString(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "no estan los datos", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(MainActivity.this, "ACCION CANCELADA", Toast.LENGTH_SHORT).show();
@@ -143,14 +154,16 @@ public class MainActivity extends AppCompatActivity {
                         //si la ventana se ha cerrado bien == RESULT_OK
                         if (result.getResultCode() == RESULT_OK){
                             //Si trae info entra
-                            if (result.getData()!=null){
+                            if (result.getData()!=null && result.getData().getExtras() != null){
                                 Bundle bundle = result.getData().getExtras();
                                 //sacar del bundle la info segun el tag
                                 Bici bici = (Bici) bundle.getSerializable("BICI");
                                 //meter bici en la lista
-                                listaBici.add(bici);
+                                if (bici!=null){
+                                    listaBici.add(bici);
+                                    txtCuentaBicis.setText("BICIS: "+listaBici.size());
+                                }
 
-                                txtCuentaBicis.setText(""+listaBici.size());
 
                                 Toast.makeText(MainActivity.this, bici.toString(), Toast.LENGTH_SHORT).show();
                             }
@@ -165,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void inicializarVistas() {
+    private void inicializarVariables() {
 
         txtCuentaCoches = findViewById(R.id.lblCantidadCochesMain);
         txtCuentaMotos = findViewById(R.id.lblCantidadMotosMain);
@@ -173,6 +186,10 @@ public class MainActivity extends AppCompatActivity {
         btnAnyadirCoche = findViewById(R.id.btnAddCocheMain);
         btnAnyadirMoto = findViewById(R.id.btnAddMotoMain);
         btnAnyadirBici = findViewById(R.id.btnAddBiciMain);
+
+        listaCoche = new ArrayList<>();
+        listaMoto = new ArrayList<>();
+        listaBici = new ArrayList<>();
 
     }
 }
